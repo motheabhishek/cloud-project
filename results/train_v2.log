@@ -1,0 +1,10 @@
+python training/train.py --config training/config_v2.yaml 
+W1108 15:48:21.374000 84764 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+Loading weights:   0%|          | 0/76 [00:00<?, ?it/s]Loading weights: 100%|██████████| 76/76 [00:00<00:00, 9727.41it/s]
+training examples: 1500
+epoch 1: loss 0.3678
+epoch 2: loss 0.1725
+epoch 3: loss 0.1564
+epoch 4: loss 0.1334
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.44it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  7.37it/s]
+saved to models/v2

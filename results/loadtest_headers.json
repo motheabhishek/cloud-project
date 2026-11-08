@@ -1,0 +1,9 @@
+{
+  "per_replica": {
+    "parser-cd7469685-9prd6": 28,
+    "parser-cd7469685-s9rwq": 26
+  },
+  "per_model_version": {
+    "v2": 54
+  }
+}

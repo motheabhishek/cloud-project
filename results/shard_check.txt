@@ -1,0 +1,4 @@
+results/teacher/shard-0.jsonl 1500
+results/teacher/shard-1.jsonl 1500
+pool: 3000 seen: 3000
+missing: 0 repeated: 0

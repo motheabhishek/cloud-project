@@ -1,0 +1,7 @@
+models/
+.venv/
+results/
+data/
+training/
+.git/
+__pycache__/
