@@ -15,13 +15,14 @@ rm -f /tmp/s3.json
 kubectl apply -f k8s/seaweedfs.yaml
 kubectl -n data rollout status deploy/seaweedfs --timeout=300s
 
-kubectl -n data port-forward svc/seaweedfs 8333:8333 >/dev/null 2>&1 &
-PF=$!; trap 'kill $PF 2>/dev/null' EXIT
-for i in $(seq 30); do curl -s localhost:8333 >/dev/null && break; sleep 2; done
 
 W=$(mktemp -d)
 for v in v1 v2; do curl -fL -o $W/model_$v.zip $REL/model_$v.zip; unzip -q -o $W/model_$v.zip -d $W; done
 
+kubectl -n data port-forward svc/seaweedfs 8333:8333 >/dev/null 2>&1 &
+PF=$!; trap 'kill $PF 2>/dev/null' EXIT
+for i in $(seq 30); do curl -s localhost:8333 >/dev/null && break; sleep 2; done
+curl -s localhost:8333 >/dev/null || { echo "SeaweedFS port-forward not reachable"; exit 1; }
 export AK SK W
 python3 - << 'PY'
 import boto3, os, glob

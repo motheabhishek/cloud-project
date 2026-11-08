@@ -6,7 +6,7 @@ GitHub repository: https://github.com/motheabhishek/cloud-project
 Final submission commit: tag `final`
 
 ## Prerequisites
-Docker, k3d, kubectl, make, Python 3 with `boto3` (`pip3 install boto3`), curl, unzip, openssl. The repository must be able to download the model from the GitHub Release `v1.0` (no weights are stored in Git).
+Docker, k3d, kubectl, make, Python 3 with `boto3`, installed into the same `python3` that `make` uses (on macOS with Homebrew Python use a venv: `python3 -m venv venv && source venv/bin/activate && pip install boto3`, and run `make up` from that shell), curl, unzip, openssl. The repository must be able to download the model from the GitHub Release `v1.0` (no weights are stored in Git).
 
 ## Build and deploy (fresh clone)
     git clone https://github.com/motheabhishek/cloud-project
