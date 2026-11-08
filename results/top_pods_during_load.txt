@@ -1,5 +1,5 @@
 NAME                      CPU(cores)   MEMORY(bytes)   
-parser-77c544b9df-f5h4k   281m         808Mi           
-parser-77c544b9df-vskxl   8m           577Mi           
-NAME     REFERENCE           TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
-parser   Deployment/parser   cpu: 0%/70%   2         2         2          125m
+parser-77c544b9df-f5h4k   1943m        731Mi           
+parser-77c544b9df-vskxl   1934m        769Mi           
+NAME     REFERENCE           TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+parser   Deployment/parser   cpu: 189%/70%   2         2         2          127m
