@@ -1,7 +1,27 @@
 name: ci
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      use_base:
+        description: "Evaluate untrained Pythia-70M to show the gate failing"
+        type: boolean
+        default: false
+
 jobs:
-  test:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff
+      - run: ruff check service worker training tools tests --select E9,F63,F7,F82
+
+  unit-tests:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -10,3 +30,50 @@ jobs:
           python-version: "3.11"
       - run: pip install pytest pyyaml
       - run: pytest -q tests
+
+  quality-gate:
+    needs: model-eval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: predictions
+      - run: python tools/score.py predictions.jsonl data/validation.jsonl --out report.json --min-validity 95
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  model-eval:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install transformers
+      - name: Get model
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ inputs.use_base }}" = "true" ]; then
+            echo "MODEL_DIR=EleutherAI/pythia-70m" >> $GITHUB_ENV
+          else
+            gh release download v1.0 -p model_v1.zip --repo ${{ github.repository }}
+            unzip -q model_v1.zip -d model_v1
+            echo "MODEL_DIR=$(dirname $(find model_v1 -name config.json | head -1))" >> $GITHUB_ENV
+          fi
+      - run: python training/predict.py --model "$MODEL_DIR" --nr 8 --out predictions.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: predictions
+          path: predictions.jsonl
