@@ -20,7 +20,7 @@ Docker, k3d, kubectl, make, Python 3 with `boto3` (`pip3 install boto3`), curl, 
     locust -f tools/locustfile.py --headless --users 4 --spawn-rate 4 --run-time 2m --host http://localhost:8080 --csv results/loadtest
     python tools/nacl_sim.py network/nacl.json network/packets_sample.jsonl --check
     python tools/score.py predictions.jsonl data/validation.jsonl --min-validity 95
-    python -m pytest -q
+    pytest -q tests
 
 ## Train
     make train
@@ -36,7 +36,12 @@ Docker, k3d, kubectl, make, Python 3 with `boto3` (`pip3 install boto3`), curl, 
 - `service/`, `Dockerfile`: inference service
 - `network/`: `subnets.md`, `nacl.json`
 - `results/`: logs, score reports, Locust output
-- `.github/workflows/`: CI (lint, unit tests, model evaluation, quality gate, secret scan)
+- `.github/workflows/`: CI pipeline (`ci.yml`)
+- `data/`: command pool, validation set, schema, rate card
+- `scripts/`: `bootstrap.sh`
+- `tools/`: load test, NACL simulator, scoring script
+- `tests/`: unit tests
+- `prompts/`, `AI_USE.md`: prompts and AI-use record
 
 ## Notes and limitations
 The cluster runs on one node, so it does not demonstrate fault tolerance across machines. The earlier measurements in `results/` come from the first cluster, which was later rebuilt with `make up` and re-verified.

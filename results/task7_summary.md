@@ -27,10 +27,10 @@ Pod names and timings differ from the first run above; the system was rebuilt an
 
 | Test | Measured result |
 |---|---|
-| Recovery (one Pod deleted under load) | 456 requests, 5 failures (1.10%), all HTTP 500 (model invalid-output). Replacement Pod Ready in about 18 s. Two Ready Pods restored. |
+| Recovery (one Pod deleted under load) | 456 requests, 5 failures (1.10%), all HTTP 500 (consistent with the model invalid-output rate). Replacement Pod Ready in about 18 s. Two Ready Pods restored. |
 | HPA scale up | 1 to 2 replicas at cpu 199% against a 70% target |
 | HPA scale down | 2 to 1 replica about 5 minutes after load ended (from the HPA AGE column) |
 | Second full run (during HPA test) | 843 requests, 9 failures (1.07%), p50 1500 ms, p95 3100 ms, 2.35 req/s |
 
-SLO result: met in the standard run (99.11% success); narrowly missed in the recovery run (98.90%) and the HPA run (98.93%). The failures are the model's invalid-output rate (about 1%), not infrastructure errors.
+SLO result: met in the standard run (99.11% success); narrowly missed in the recovery run (98.90%) and the HPA run (98.93%). The failures were all HTTP 500, consistent with the invalid-output rate of the model (about 1%).
 Model quality (validation, 100 examples): student full-frame 29%, intent 71%, JSON validity 99%; teacher full-frame 39%, JSON validity 82%.
