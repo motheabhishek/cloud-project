@@ -1,5 +1,28 @@
-# Student Kit: Cloud Computing Mini Project
+GitHub repository: https://github.com/motheabhishek/cloud-project
 
+# Cloud Computing Mini Project (Roll 230101018)
+
+Knowledge distillation of a command parser (Phi-3.5 teacher to Pythia-70M student), deployed on a local k3d Kubernetes cluster.
+
+## Layout
+cluster/ (k3d config), k8s/ (manifests), service/ (FastAPI), training/, worker/, prompts/, network/ (subnets and NACL), tools/, tests/, results/ (evidence), report/report.pdf
+
+## Build and deploy
+    k3d cluster create --config cluster/k3d.yaml
+    docker build -t command-parser:v1c .
+    k3d image import command-parser:v1c -c cloudproj
+    kubectl apply -f k8s/
+
+## Test
+    curl -X POST localhost:8080/parse -H "Content-Type: application/json" -d '{"text": "what is the weather in london"}'
+    locust -f tools/locustfile.py --headless --users 4 --spawn-rate 4 --run-time 2m --host http://localhost:8080 --csv results/loadtest
+    python tools/score.py results/pred_v1.jsonl data/validation.jsonl
+    python tools/nacl_sim.py network/nacl.json network/packets_sample.jsonl --check
+
+## Tear down
+    k3d cluster delete cloudproj
+
+Model weights are in the GitHub Release (model_v1.zip, model_v2.zip, checksums.txt), not in Git.
 Read the project handout first. It explains every file here.
 
     data/commands_pool.jsonl     3,000 commands (text only)

@@ -1,14 +1,10 @@
 {
   "per_replica": {
-    "parser-98655f959-b8fdk": 7,
-    "parser-98655f959-cnlpl": 5,
-    "parser-cd7469685-hxn4l": 3,
-    "parser-cd7469685-fprj5": 3,
-    "parser-98655f959-2lvfb": 3,
-    "parser-cd7469685-npljv": 4
+    "parser-77c544b9df-vskxl": 31,
+    "parser-568bfccdb6-hgsb2": 4,
+    "parser-77c544b9df-f5h4k": 26
   },
   "per_model_version": {
-    "v1": 15,
-    "v2": 10
+    "v1": 61
   }
 }
