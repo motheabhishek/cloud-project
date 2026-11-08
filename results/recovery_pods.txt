@@ -1,0 +1,5 @@
+NAME                      READY   STATUS    RESTARTS   AGE
+parser-77c544b9df-6kpx6   0/1     Running   0          14s
+parser-77c544b9df-xdd7w   1/1     Running   0          5m3s
+parser-77c544b9df-6kpx6   1/1     Running   0          18s
+parser-77c544b9df-6kpx6   1/1     Running   0          18s

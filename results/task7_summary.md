@@ -21,3 +21,16 @@ SLO: 99% of requests succeed per run. Budget 3.36 requests; used 3 (89%).
 | Resource utilisation | CPU 1943m of 2000m, memory 769 MiB of 1 GiB | Pods saturated at 4 users | Smaller model, more replicas on a multi-node cluster |
 | Reliability and recovery | Cold start median 7 s; replicas split 49.5/50.5 | One node, so no real fault tolerance; HPA stuck at max 2 (189% vs 70% target) | Multi-node cluster, higher HPA maximum |
 | Security and cost | Credentials from Kubernetes Secret s3-creds; 1.47 INR per 1000 requests | Secret is only base64; no TLS on Ingress | Sealed secrets, TLS, right-size CPU limit |
+
+## Later runs on the cluster rebuilt with `make up` from a fresh clone
+Pod names and timings differ from the first run above; the system was rebuilt and re-verified.
+
+| Test | Measured result |
+|---|---|
+| Recovery (one Pod deleted under load) | 456 requests, 5 failures (1.10%), all HTTP 500 (model invalid-output). Replacement Pod Ready in about 18 s. Two Ready Pods restored. |
+| HPA scale up | 1 to 2 replicas at cpu 199% against a 70% target |
+| HPA scale down | 2 to 1 replica about 5 minutes after load ended (from the HPA AGE column) |
+| Second full run (during HPA test) | 843 requests, 9 failures (1.07%), p50 1500 ms, p95 3100 ms, 2.35 req/s |
+
+SLO result: met in the standard run (99.11% success); narrowly missed in the recovery run (98.90%) and the HPA run (98.93%). The failures are the model's invalid-output rate (about 1%), not infrastructure errors.
+Model quality (validation, 100 examples): student full-frame 29%, intent 71%, JSON validity 99%; teacher full-frame 39%, JSON validity 82%.
