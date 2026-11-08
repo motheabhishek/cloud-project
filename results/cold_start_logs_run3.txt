@@ -1,0 +1,8 @@
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Downloading model from s3://models/models/v2/ via http://seaweedfs.data.svc.cluster.local:8333
+Downloaded 7 files from object storage
+Loading weights:   0%|          | 0/76 [00:00<?, ?it/s]Loading weights: 100%|██████████| 76/76 [00:00<00:00, 10227.06it/s]
+INFO:     10.42.0.1:48286 - "GET /readyz HTTP/1.1" 200 OK

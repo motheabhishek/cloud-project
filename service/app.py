@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "1")))
+
 MODEL_URI = os.environ.get("MODEL_URI", "s3://models/models/v1/")
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "v1")
 S3_ENDPOINT = os.environ.get("S3_ENDPOINT", "")
@@ -29,10 +31,14 @@ def load():
                       aws_access_key_id=os.environ.get("S3_ACCESS_KEY"),
                       aws_secret_access_key=os.environ.get("S3_SECRET_KEY"))
     os.makedirs(LOCAL, exist_ok=True)
+    print(f"Downloading model from s3://{bucket}/{prefix} via {S3_ENDPOINT}", flush=True)
+    n = 0
     for o in s3.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents", []):
         name = o["Key"].split("/")[-1]
         if name:
             s3.download_file(bucket, o["Key"], os.path.join(LOCAL, name))
+            n += 1
+    print(f"Downloaded {n} files from object storage", flush=True)
     state["tok"] = AutoTokenizer.from_pretrained(LOCAL)
     state["tok"].pad_token = state["tok"].eos_token
     state["model"] = AutoModelForCausalLM.from_pretrained(LOCAL).float().eval()
